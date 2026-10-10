@@ -1,0 +1,2000 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1a3a5c">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="محطة العاشر">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>محطة كهرباء العاشر الجديدة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #1a3a5c;
+  --primary-light: #245080;
+  --accent: #f0a500;
+  --accent-light: #ffc53d;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1a2332;
+  --text-muted: #5a6a7a;
+  --border: #d0dce8;
+  --success: #1a7a4a;
+  --success-bg: #e8f7ef;
+  --danger: #b03030;
+  --danger-bg: #fdeaea;
+  --warning: #a06000;
+  --warning-bg: #fff3d0;
+  --radius: 14px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(26,58,92,0.10);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: 'Cairo', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+/* TOP BAR */
+.topbar {
+  background: var(--primary);
+  color: #fff;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+.topbar-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+}
+.topbar-title { font-size: 15px; font-weight: 700; }
+.topbar-sub { font-size: 11px; opacity: 0.75; margin-top: 1px; }
+.topbar-icon { width: 38px; height: 38px; background: rgba(255,255,255,0.15); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--card);
+  border-top: 1px solid var(--border);
+  display: flex;
+  z-index: 100;
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -2px 12px rgba(0,0,0,0.08);
+}
+.nav-btn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 4px 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  border: none;
+  background: transparent;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  gap: 3px;
+  transition: color 0.2s;
+}
+.nav-btn.active { color: var(--primary); }
+.nav-btn .nav-icon { font-size: 22px; line-height: 1; }
+.nav-btn.active .nav-dot {
+  width: 4px; height: 4px; border-radius: 50%;
+  background: var(--accent); margin-top: 2px;
+}
+
+/* PAGES */
+.page { display: none; padding: 16px 16px 90px; }
+.page.active { display: block; }
+
+/* CARDS */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  margin-bottom: 14px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--primary);
+  color: #fff;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.card-header-title { font-size: 14px; font-weight: 700; }
+.card-header-sub { font-size: 11px; opacity: 0.8; }
+.card-body { padding: 14px 16px; }
+
+/* SECTION HEADERS */
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 14px 0 8px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid var(--accent);
+  display: inline-block;
+}
+
+/* FORM FIELDS */
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 12px; font-weight: 600; color: var(--text-muted); margin-bottom: 5px; }
+.field input, .field select, .field textarea {
+  width: 100%;
+  padding: 11px 13px;
+  font-size: 14px;
+  font-family: 'Cairo', sans-serif;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: #fff;
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--primary);
+}
+.field textarea { min-height: 70px; resize: vertical; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* RADIO CHIPS */
+.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 5px; }
+.chip-label {
+  display: flex; align-items: center;
+  padding: 7px 13px;
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px;
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+  transition: all 0.18s;
+  background: #fff;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.chip-label input { display: none; }
+.chip-label:has(input:checked) { border-color: var(--primary); background: var(--primary); color: #fff; }
+.chips.ok .chip-label:has(input[value="مطابق"]:checked) { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.chips.ok .chip-label:has(input[value="غير مطابق"]:checked) { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.chips.yn .chip-label:has(input[value="لا"]:checked) { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.chips.yn .chip-label:has(input[value="نعم"]:checked) { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.chips.cond .chip-label:has(input[value="سليم"]:checked) { border-color: var(--success); background: var(--success-bg); color: var(--success); }
+.chips.cond .chip-label:has(input[value="تالف"]:checked) { border-color: var(--danger); background: var(--danger-bg); color: var(--danger); }
+.chips.cond .chip-label:has(input[value="يحتاج صيانة"]:checked) { border-color: var(--warning); background: var(--warning-bg); color: var(--warning); }
+
+/* TRANSFORMER TABS */
+.t-tabs { display: flex; gap: 7px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+.t-tabs::-webkit-scrollbar { display: none; }
+.t-tab {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1.5px solid var(--border);
+  font-size: 13px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  background: #fff;
+  color: var(--text-muted);
+  transition: all 0.18s;
+}
+.t-tab.active { background: var(--primary); border-color: var(--primary); color: #fff; }
+
+/* BUTTONS */
+.btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.2s, transform 0.1s;
+  margin-bottom: 10px;
+}
+.btn:active { transform: scale(0.98); opacity: 0.9; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-accent { background: var(--accent); color: #1a2332; }
+.btn-success { background: var(--success); color: #fff; }
+.btn-outline { background: transparent; border: 1.5px solid var(--border); color: var(--text-muted); }
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 80px; left: 16px; right: 16px;
+  background: var(--primary);
+  color: #fff;
+  padding: 13px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+  z-index: 999;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.3s;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast.success { background: var(--success); }
+.toast.error { background: var(--danger); }
+
+/* HOME PAGE */
+.home-header {
+  background: var(--primary);
+  margin: -16px -16px 16px;
+  padding: 24px 20px 28px;
+  color: #fff;
+  position: relative;
+  overflow: hidden;
+}
+.home-header::before {
+  content: '⚡';
+  position: absolute;
+  font-size: 120px;
+  opacity: 0.06;
+  left: -10px; top: -20px;
+}
+.home-header h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
+.home-header p { font-size: 13px; opacity: 0.8; }
+.home-date { display: inline-block; background: rgba(255,255,255,0.15); border-radius: 20px; padding: 4px 12px; font-size: 12px; margin-top: 10px; }
+
+.stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+.stat-card {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.stat-num { font-size: 26px; font-weight: 700; color: var(--primary); }
+.stat-label { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  box-shadow: var(--shadow);
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  font-family: 'Cairo', sans-serif;
+  text-align: right;
+  transition: transform 0.15s;
+}
+.quick-btn:active { transform: scale(0.98); }
+.quick-icon { width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.quick-text { flex: 1; }
+.quick-title { font-size: 14px; font-weight: 700; color: var(--text); }
+.quick-sub { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+.quick-arrow { color: var(--text-muted); font-size: 18px; }
+
+/* HISTORY */
+.history-item {
+  background: var(--card);
+  border-radius: var(--radius-sm);
+  padding: 13px 15px;
+  margin-bottom: 10px;
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.history-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.history-info { flex: 1; }
+.history-title { font-size: 13px; font-weight: 600; }
+.history-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.history-badge { font-size: 11px; padding: 3px 9px; border-radius: 12px; font-weight: 600; }
+
+/* QR LOCK */
+.qr-lock{display:flex;align-items:center;gap:8px;background:var(--warning-bg,#fff3d0);border:1.5px solid var(--warning,#f0a500);border-radius:10px;padding:10px 14px;font-size:13px;color:var(--warning,#a06000);font-weight:600;cursor:pointer;margin-bottom:10px;font-family:'Cairo',sans-serif}
+.qr-lock.unlocked{background:var(--success-bg,#e8f7ef);border-color:var(--success,#1a7a4a);color:var(--success,#1a7a4a);cursor:default}
+/* QR SCANNER OVERLAY */
+#qr-overlay{position:fixed;inset:0;z-index:900;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center}
+#qr-overlay.hidden{display:none}
+#qr-video{width:100%;max-width:420px;border-radius:12px;display:block}
+#qr-canvas{display:none}
+.qr-frame{position:absolute;width:220px;height:220px;border:3px solid #f0a500;border-radius:16px;box-shadow:0 0 0 9999px rgba(0,0,0,0.55);pointer-events:none}
+#qr-scan-title{position:absolute;top:30px;color:#f0a500;font-size:16px;font-weight:700;font-family:'Cairo',sans-serif;text-align:center;padding:0 20px}
+#qr-scan-status{position:absolute;bottom:110px;background:rgba(26,58,92,0.95);color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;font-weight:600;font-family:'Cairo',sans-serif}
+#qr-cancel-btn{position:absolute;bottom:48px;background:rgba(255,255,255,0.15);color:#fff;border:1.5px solid rgba(255,255,255,0.4);padding:11px 32px;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:600;cursor:pointer}
+
+/* PIN LOCK OVERLAY */
+.pin-overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--primary);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 30px 24px;
+}
+.pin-overlay.hidden { display: none; }
+.pin-logo { font-size: 56px; margin-bottom: 10px; }
+.pin-title { font-size: 18px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.pin-sub { font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 32px; text-align: center; }
+.pin-dots { display: flex; gap: 14px; margin-bottom: 32px; }
+.pin-dot {
+  width: 16px; height: 16px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5);
+  background: transparent;
+  transition: all 0.2s;
+}
+.pin-dot.filled { background: var(--accent); border-color: var(--accent); }
+.pin-keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; max-width: 280px; }
+.pin-key {
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  font-size: 22px;
+  font-family: 'Cairo', sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  display: flex; align-items: center; justify-content: center;
+}
+.pin-key:active { background: rgba(255,255,255,0.25); transform: scale(0.92); }
+.pin-key.del { font-size: 18px; background: rgba(255,255,255,0.07); }
+.pin-key.empty { background: transparent; cursor: default; }
+.pin-error { color: var(--accent); font-size: 13px; font-weight: 600; margin-top: -16px; margin-bottom: 16px; min-height: 20px; }
+
+/* SETTINGS */
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  font-size: 14px;
+}
+.settings-item:last-child { border-bottom: none; }
+.settings-label { font-weight: 600; }
+.settings-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+/* SHEETS CONFIG */
+.config-box {
+  background: var(--primary);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.config-box h3 { font-size: 15px; font-weight: 700; margin-bottom: 6px; }
+.config-box p { font-size: 12px; opacity: 0.85; line-height: 1.6; }
+.config-box input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 13px;
+  font-family: 'Cairo', sans-serif;
+  direction: ltr;
+  text-align: left;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <div>
+      <div class="topbar-title" id="topbar-title">محطة كهرباء العاشر الجديدة</div>
+      <div class="topbar-sub" id="topbar-sub">جهد 11 / 66 / 220 ك.ف</div>
+    </div>
+    <div class="topbar-icon">⚡</div>
+  </div>
+</div>
+
+<!-- PAGES -->
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="home-header">
+    <h2 id="home-station-name">كارت المتابعة</h2>
+    <p id="home-station-voltage">متابعة مهمات المحطة اليومية</p>
+    <div class="home-date" id="home-date"></div>
+  </div>
+
+  <!-- اختيار المحطة -->
+  <div id="station-selector-card" style="background:#fff;border-radius:14px;padding:14px 16px;margin-bottom:14px;box-shadow:0 2px 12px rgba(26,58,92,0.10)">
+    <div style="font-size:12px;font-weight:700;color:var(--text-muted);margin-bottom:8px">📍 اختر المحطة</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <select id="station-select" onchange="selectStation(this.value)" style="flex:1;padding:10px 12px;font-size:14px;font-family:'Cairo',sans-serif;border:1.5px solid var(--border);border-radius:10px;background:#fff;color:var(--text)">
+        <option value="">-- اختر محطة --</option>
+      </select>
+      <button onclick="loadStationsList()" style="padding:10px 12px;background:var(--primary);color:#fff;border:none;border-radius:10px;font-size:18px;cursor:pointer" title="تحديث القائمة">🔄</button>
+    </div>
+    <div id="station-select-status" style="font-size:11px;color:var(--text-muted);margin-top:6px;text-align:center"></div>
+  </div>
+
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="home-stat-transformers">5</div>
+      <div class="stat-label">محولات رئيسية</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="home-stat-circuits">6</div>
+      <div class="stat-label">دوائر</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-submitted">0</div>
+      <div class="stat-label">سجلات اليوم</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-total">0</div>
+      <div class="stat-label">إجمالي السجلات</div>
+    </div>
+  </div>
+
+  <button class="quick-btn" onclick="goPage('form')">
+    <div class="quick-icon" style="background:#e8f0f8">📋</div>
+    <div class="quick-text">
+      <div class="quick-title">تسجيل جولة جديدة</div>
+      <div class="quick-sub">تعبئة كارت المتابعة</div>
+    </div>
+    <div class="quick-arrow">‹</div>
+  </button>
+
+  <button class="quick-btn" onclick="goPage('history')">
+    <div class="quick-icon" style="background:#e8f7ef">📊</div>
+    <div class="quick-text">
+      <div class="quick-title">السجلات السابقة</div>
+      <div class="quick-sub">عرض وتصدير البيانات</div>
+    </div>
+    <div class="quick-arrow">‹</div>
+  </button>
+
+  <button class="quick-btn" onclick="exportAllExcel()">
+    <div class="quick-icon" style="background:#e8f7ef">💬</div>
+    <div class="quick-text">
+      <div class="quick-title">إرسال على واتساب</div>
+      <div class="quick-sub">تنزيل Excel وإرساله على 01141162798</div>
+    </div>
+    <div class="quick-arrow">‹</div>
+  </button>
+
+  <button class="quick-btn" onclick="goPage('settings')">
+    <div class="quick-icon" style="background:#fff3d0">⚙️</div>
+    <div class="quick-text">
+      <div class="quick-title">الإعدادات</div>
+      <div class="quick-sub">ربط Google Sheets والبيانات</div>
+    </div>
+    <div class="quick-arrow">‹</div>
+  </button>
+</div>
+
+<!-- FORM -->
+<div id="page-form" class="page">
+
+  <!-- Info -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-header-title">البيانات الأساسية</div>
+      </div>
+      <span>👤</span>
+    </div>
+    <div class="card-body">
+      <div class="grid2">
+        <div class="field">
+          <label>التاريخ</label>
+          <input type="date" id="f_date">
+        </div>
+        <div class="field">
+          <label>الاسم</label>
+          <input type="text" id="f_name" placeholder="اسم المسؤول">
+        </div>
+      </div>
+      <div class="field">
+        <label>الوظيفة</label>
+        <div class="chips">
+          <label class="chip-label"><input type="radio" name="f_role" value="مهندس الوردية"> مهندس الوردية</label>
+          <label class="chip-label"><input type="radio" name="f_role" value="فني الوردية"> فني الوردية</label>
+          <label class="chip-label"><input type="radio" name="f_role" value="مدير المحطة"> مدير المحطة</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Transformers -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-header-title">المحولات الرئيسية</div>
+        <div class="card-header-sub">اختر المحول للتعبئة</div>
+      </div>
+      <span>🔌</span>
+    </div>
+    <div class="card-body">
+      <div class="t-tabs" id="t-tabs"></div>
+      <div id="t-forms"></div>
+    </div>
+  </div>
+
+  <!-- Busbar 220kV -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-header-title">الرابط العرضي جهد 220 ك.ف</div>
+        <div class="card-header-sub">امسح QR ثم أدخل البيانات</div>
+      </div>
+      <span>🔗</span>
+    </div>
+    <div class="card-body" id="bb-forms"></div>
+  </div>
+
+  <!-- Circuits -->
+  <div class="card">
+    <div class="card-header">
+      <div>
+        <div class="card-header-title">الدوائر</div>
+        <div class="card-header-sub">متابعة الدوائر</div>
+      </div>
+      <span>⚡</span>
+    </div>
+    <div class="card-body" id="c-forms"></div>
+  </div>
+
+  <!-- Submit -->
+  <button class="btn btn-primary" onclick="submitForm()">💾 حفظ وإرسال</button>
+  <button class="btn btn-outline" onclick="resetForm()">🗑️ مسح الكل</button>
+</div>
+
+<!-- SHARE MODAL -->
+<div id="share-modal" style="display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.5);align-items:flex-end;justify-content:center">
+  <div style="background:var(--card);border-radius:20px 20px 0 0;padding:24px 20px 40px;width:100%;max-width:500px">
+    <div style="text-align:center;margin-bottom:20px">
+      <div style="font-size:22px;font-weight:700;color:var(--text)">إرسال على واتساب</div>
+      <div style="font-size:13px;color:var(--text-muted);margin-top:4px">اختر طريقة الإرسال</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <button onclick="shareText()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#e8f7ef;border:1.5px solid #25D366;border-radius:14px;cursor:pointer;font-family:'Cairo',sans-serif;text-align:right;width:100%">
+        <span style="font-size:32px">💬</span>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:#1a7a4a">رسالة نصية منسقة</div>
+          <div style="font-size:12px;color:#5a6a7a;margin-top:2px">يفتح واتساب مباشرة مع كل البيانات</div>
+        </div>
+      </button>
+      <button onclick="shareExcel()" style="display:flex;align-items:center;gap:14px;padding:16px;background:#e8f0f8;border:1.5px solid #1a3a5c;border-radius:14px;cursor:pointer;font-family:'Cairo',sans-serif;text-align:right;width:100%">
+        <span style="font-size:32px">📊</span>
+        <div>
+          <div style="font-size:15px;font-weight:700;color:#1a3a5c">شيت Excel</div>
+          <div style="font-size:12px;color:#5a6a7a;margin-top:2px">ينزل الملف على جهازك ثم تبعته واتساب</div>
+        </div>
+      </button>
+      <button onclick="closeShareModal()" style="padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;color:var(--text-muted);cursor:pointer">إلغاء</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="page-history" class="page">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+    <h2 style="font-size:16px;font-weight:700">السجلات السابقة</h2>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-primary" style="width:auto;padding:8px 14px;font-size:12px;margin:0" onclick="renderHistory(true)">🔄 تحديث</button>
+      <button class="btn btn-accent" style="width:auto;padding:8px 14px;font-size:12px;margin:0" onclick="exportAllExcel()">📥 Excel</button>
+      <button style="width:auto;padding:8px 14px;font-size:12px;margin:0;background:#25D366;color:#fff;border:none;border-radius:var(--radius-sm);font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer" onclick="sendWhatsAppOnly()">💬 واتساب</button>
+    </div>
+  </div>
+  <div id="history-list">
+    <div style="text-align:center;color:var(--text-muted);padding:40px 20px;font-size:14px">لا توجد سجلات بعد</div>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="page-settings" class="page">
+
+  <!-- إعداد المحطة -->
+  <div style="background:linear-gradient(135deg,#1a3a5c,#245080);border-radius:14px;padding:16px;margin-bottom:14px;color:#fff">
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px">🏭 إعداد المحطة</div>
+    <div style="font-size:12px;opacity:0.85">أدخل بيانات محطتك مرة واحدة وسيتبنى النموذج تلقائياً</div>
+  </div>
+
+  <div class="card" style="margin-bottom:14px">
+    <div class="card-body">
+      <div class="field">
+        <label>اسم المحطة</label>
+        <input type="text" id="cfg-name" placeholder="مثال: محطة كهرباء المنصورة">
+      </div>
+      <div class="field">
+        <label>الجهد (ك.ف)</label>
+        <input type="text" id="cfg-voltage" placeholder="مثال: 11/66/220">
+      </div>
+      <div class="field">
+        <label>عدد المحولات الرئيسية</label>
+        <input type="number" id="cfg-tcount" min="1" max="20" placeholder="مثال: 5">
+      </div>
+      <div class="field">
+        <label>أسماء الدوائر (كل دائرة في سطر)</label>
+        <textarea id="cfg-circuits" style="min-height:130px" placeholder="الدائرة (1) الشباب
+الدائرة (2) الشباب
+الدائرة (1) أبو سلطان
+الدائرة (2) أبو سلطان
+الدائرة (1) القديمة
+الدائرة (2) القديمة"></textarea>
+      </div>
+      <button onclick="applyStationConfig()" style="width:100%;margin-top:10px;padding:13px;background:#1a3a5c;color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer">
+        ✅ تطبيق وإعادة بناء النموذج
+      </button>
+      <button onclick="setupStationOnServer()" style="width:100%;margin-top:8px;padding:13px;background:#245080;color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer">
+        📊 إنشاء ملف Google Sheet + QR Codes
+      </button>
+      <div id="station-sheet-url" style="margin-top:10px;text-align:center;font-size:13px;color:var(--text-muted)">
+        لم يتم إنشاء ملف بعد
+      </div>
+    </div>
+  </div>
+
+  <div class="config-box">
+    <h3>🔗 ربط Google Sheets</h3>
+    <p>أدخل رابط Apps Script الخاص بك لحفظ البيانات تلقائياً على Google Sheets</p>
+    <input type="url" id="sheets-url" placeholder="https://script.google.com/macros/s/..." value="">
+  </div>
+
+  <div class="card">
+    <div class="settings-item">
+      <div>
+        <div class="settings-label">حفظ محلي</div>
+        <div class="settings-sub">البيانات محفوظة على الجهاز دائماً</div>
+      </div>
+      <span style="color:var(--success)">✓ مفعّل</span>
+    </div>
+    <div class="settings-item">
+      <div>
+        <div class="settings-label">رفع Google Sheets</div>
+        <div class="settings-sub" id="sheets-status">غير مربوط</div>
+      </div>
+      <button onclick="saveSettings()" style="background:var(--primary);color:#fff;border:none;border-radius:6px;padding:6px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:600;cursor:pointer">حفظ وتحقق</button>
+    </div>
+    <div class="settings-item">
+      <div>
+        <div class="settings-label">مزامنة يدوية</div>
+        <div class="settings-sub">جلب كل السجلات من الشيت الآن</div>
+      </div>
+      <button onclick="syncNow()" style="background:var(--success-bg);color:var(--success);border:none;border-radius:6px;padding:6px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:600;cursor:pointer">🔄 مزامنة</button>
+    </div>
+    <div class="settings-item">
+      <div>
+        <div class="settings-label">حذف كل البيانات</div>
+        <div class="settings-sub">مسح السجلات المحلية والتسجيلات القديمة نهائياً</div>
+      </div>
+      <button onclick="showDeleteConfirm()" style="background:var(--danger-bg);color:var(--danger);border:none;border-radius:6px;padding:6px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:600;cursor:pointer">🗑️ حذف</button>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRM MODAL -->
+  <div id="delete-modal" style="display:none;position:fixed;inset:0;z-index:600;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;padding:24px">
+    <div style="background:var(--card);border-radius:20px;padding:28px 24px;width:100%;max-width:340px;text-align:center">
+      <div style="font-size:48px;margin-bottom:12px">🗑️</div>
+      <div style="font-size:17px;font-weight:700;color:var(--text);margin-bottom:8px">حذف كل البيانات</div>
+      <div style="font-size:13px;color:var(--text-muted);line-height:1.7;margin-bottom:20px">
+        سيتم حذف <strong>كل السجلات والتسجيلات</strong> المحفوظة على الجهاز نهائياً.<br>
+        <span style="color:var(--danger);font-weight:600">هذا الإجراء لا يمكن التراجع عنه!</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <button onclick="confirmDeleteAll()" style="padding:13px;background:var(--danger);color:#fff;border:none;border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;font-weight:700;cursor:pointer">نعم، احذف كل شيء</button>
+        <button onclick="document.getElementById('delete-modal').style.display='none'" style="padding:13px;background:transparent;border:1.5px solid var(--border);border-radius:12px;font-family:'Cairo',sans-serif;font-size:14px;color:var(--text-muted);cursor:pointer">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body" style="font-size:13px;color:var(--text-muted);line-height:1.8;text-align:center">
+      <div style="font-size:30px;margin-bottom:8px">⚡</div>
+      <div style="font-weight:700;color:var(--text);font-size:14px" id="about-station-name">محطة كهرباء العاشر الجديدة</div>
+      <div>نظام متابعة المهمات v1.0</div>
+    </div>
+  </div>
+</div>
+
+<!-- QR SCANNER -->
+<div id="qr-overlay" class="hidden">
+  <div id="qr-scan-title">امسح الكود</div>
+  <video id="qr-video" autoplay playsinline muted></video>
+  <canvas id="qr-canvas"></canvas>
+  <div class="qr-frame"></div>
+  <div id="qr-scan-status">🔍 جاري البحث...</div>
+  <button id="qr-cancel-btn" onclick="closeQRScanner()">إلغاء</button>
+</div>
+
+<!-- PIN OVERLAY -->
+<div id="pin-overlay" class="pin-overlay">
+  <div class="pin-logo">🔒</div>
+  <div class="pin-title">محطة كهرباء العاشر الجديدة</div>
+  <div class="pin-sub" id="pin-sub">أدخل الرقم السري للدخول</div>
+  <div class="pin-dots" id="pin-dots">
+    <div class="pin-dot" id="pd0"></div>
+    <div class="pin-dot" id="pd1"></div>
+    <div class="pin-dot" id="pd2"></div>
+    <div class="pin-dot" id="pd3"></div>
+    <div class="pin-dot" id="pd4"></div>
+  </div>
+  <div class="pin-error" id="pin-error"></div>
+  <div class="pin-keypad">
+    <button class="pin-key" onclick="pinKey('1')">1</button>
+    <button class="pin-key" onclick="pinKey('2')">2</button>
+    <button class="pin-key" onclick="pinKey('3')">3</button>
+    <button class="pin-key" onclick="pinKey('4')">4</button>
+    <button class="pin-key" onclick="pinKey('5')">5</button>
+    <button class="pin-key" onclick="pinKey('6')">6</button>
+    <button class="pin-key" onclick="pinKey('7')">7</button>
+    <button class="pin-key" onclick="pinKey('8')">8</button>
+    <button class="pin-key" onclick="pinKey('9')">9</button>
+    <button class="pin-key empty"></button>
+    <button class="pin-key" onclick="pinKey('0')">0</button>
+    <button class="pin-key del" onclick="pinDel()">⌫</button>
+  </div>
+</div>
+
+<!-- SECTION PIN OVERLAY (for history & settings) -->
+<div id="section-pin-overlay" class="pin-overlay hidden">
+  <div class="pin-logo">🔐</div>
+  <div class="pin-title" id="section-pin-title">السجلات السابقة</div>
+  <div class="pin-sub">أدخل الرقم السري للوصول</div>
+  <div class="pin-dots" id="section-pin-dots">
+    <div class="pin-dot" id="spd0"></div>
+    <div class="pin-dot" id="spd1"></div>
+    <div class="pin-dot" id="spd2"></div>
+    <div class="pin-dot" id="spd3"></div>
+    <div class="pin-dot" id="spd4"></div>
+  </div>
+  <div class="pin-error" id="section-pin-error"></div>
+  <div class="pin-keypad">
+    <button class="pin-key" onclick="sectionPinKey('1')">1</button>
+    <button class="pin-key" onclick="sectionPinKey('2')">2</button>
+    <button class="pin-key" onclick="sectionPinKey('3')">3</button>
+    <button class="pin-key" onclick="sectionPinKey('4')">4</button>
+    <button class="pin-key" onclick="sectionPinKey('5')">5</button>
+    <button class="pin-key" onclick="sectionPinKey('6')">6</button>
+    <button class="pin-key" onclick="sectionPinKey('7')">7</button>
+    <button class="pin-key" onclick="sectionPinKey('8')">8</button>
+    <button class="pin-key" onclick="sectionPinKey('9')">9</button>
+    <button class="pin-key empty"></button>
+    <button class="pin-key" onclick="sectionPinKey('0')">0</button>
+    <button class="pin-key del" onclick="sectionPinDel()">⌫</button>
+  </div>
+  <button onclick="document.getElementById('section-pin-overlay').classList.add('hidden')" style="margin-top:24px;background:rgba(255,255,255,0.12);color:#fff;border:none;border-radius:10px;padding:10px 28px;font-family:'Cairo',sans-serif;font-size:13px;cursor:pointer">إلغاء</button>
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn active" id="nav-home" onclick="goPage('home')">
+    <span class="nav-icon">🏠</span>
+    <span>الرئيسية</span>
+    <span class="nav-dot"></span>
+  </button>
+  <button class="nav-btn" id="nav-form" onclick="goPage('form')">
+    <span class="nav-icon">📋</span>
+    <span>تسجيل</span>
+  </button>
+  <button class="nav-btn" id="nav-history" onclick="goPage('history')">
+    <span class="nav-icon">📊</span>
+    <span>السجلات</span>
+  </button>
+  <button class="nav-btn" id="nav-settings" onclick="goPage('settings')">
+    <span class="nav-icon">⚙️</span>
+    <span>الإعدادات</span>
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ── STATION CONFIG ──
+function loadStationConfig() {
+  try {
+    const s = localStorage.getItem('station_config');
+    if (s) return JSON.parse(s);
+  } catch(e) {}
+  return {
+    name: 'محطة كهرباء العاشر الجديدة',
+    voltage: '11/66/220',
+    transformerCount: 5,
+    circuits: [
+      {id:'sh1', name:'الدائرة (1) الشباب'},
+      {id:'sh2', name:'الدائرة (2) الشباب'},
+      {id:'su1', name:'الدائرة (1) أبو سلطان'},
+      {id:'su2', name:'الدائرة (2) أبو سلطان'},
+      {id:'ol1', name:'الدائرة (1) القديمة'},
+      {id:'ol2', name:'الدائرة (2) القديمة'},
+    ]
+  };
+}
+
+function updateStationUI() {
+  const c = STATION_CONFIG;
+  const n = c.name || 'محطة كهرباء العاشر الجديدة';
+  const v = c.voltage || '11/66/220';
+  ['topbar-title','home-station-name','about-station-name'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = n;
+  });
+  const ts = document.getElementById('topbar-sub');
+  if (ts) ts.textContent = 'جهد ' + v + ' ك.ف';
+  const hv = document.getElementById('home-station-voltage');
+  if (hv) hv.textContent = n + ' | ' + v + ' ك.ف';
+  const st = document.getElementById('home-stat-transformers');
+  if (st) st.textContent = TRANSFORMERS.length;
+  const sc = document.getElementById('home-stat-circuits');
+  if (sc) sc.textContent = CIRCUITS.length;
+}
+
+function loadConfigToForm() {
+  const c = STATION_CONFIG;
+  const fn = document.getElementById('cfg-name');
+  const fv = document.getElementById('cfg-voltage');
+  const ft = document.getElementById('cfg-tcount');
+  const fc = document.getElementById('cfg-circuits');
+  if (fn) fn.value = c.name || '';
+  if (fv) fv.value = c.voltage || '';
+  if (ft) ft.value = c.transformerCount || 5;
+  if (fc) fc.value = (c.circuits || []).map(x => x.name).join('\n');
+  // عرض رابط الشيت لو موجود
+  const sheetUrl = localStorage.getItem('station_sheet_url') || '';
+  const surl = document.getElementById('station-sheet-url');
+  if (surl) {
+    if (sheetUrl) {
+      surl.innerHTML = `📊 <a href="${sheetUrl}" target="_blank" style="color:var(--primary);font-weight:600">فتح شيت المحطة ↗</a>`;
+    } else {
+      surl.textContent = 'لم يتم إنشاء ملف بعد - اضغط الزر أعلاه';
+    }
+  }
+}
+
+function applyStationConfig() {
+  const name    = (document.getElementById('cfg-name').value || '').trim();
+  const voltage = (document.getElementById('cfg-voltage').value || '').trim();
+  const tcount  = parseInt(document.getElementById('cfg-tcount').value) || 5;
+  const ctext   = (document.getElementById('cfg-circuits').value || '').trim();
+  if (!name)  { showToast('⚠️ أدخل اسم المحطة', 'error'); return; }
+  if (!ctext) { showToast('⚠️ أدخل دائرة واحدة على الأقل', 'error'); return; }
+  const circuits = ctext.split('\n').map((s,i) => ({id:'c'+i, name:s.trim()})).filter(c=>c.name);
+  const cfg = { name, voltage, transformerCount: tcount, circuits };
+  localStorage.setItem('station_config', JSON.stringify(cfg));
+  // مسح ID الشيت القديم لو تغير اسم المحطة
+  const oldCfg = STATION_CONFIG;
+  if (oldCfg.name !== name) {
+    localStorage.removeItem('station_sheet_id');
+    localStorage.removeItem('station_sheet_url');
+    const surl = document.getElementById('station-sheet-url');
+    if (surl) surl.textContent = 'لم يتم إنشاء ملف بعد';
+  }
+  STATION_CONFIG = cfg;
+  TRANSFORMERS   = Array.from({length: tcount}, (_,i) => i+1);
+  CIRCUITS       = circuits;
+  updateStationUI();
+  // إعادة بناء النماذج
+  document.getElementById('t-tabs').innerHTML = '';
+  document.getElementById('t-forms').innerHTML = '';
+  document.getElementById('c-forms').innerHTML = '';
+  buildTransformerForms();
+  buildBusbarForms();
+  buildCircuitForms();
+  showToast('✅ تم تطبيق إعدادات ' + name, 'success');
+  setTimeout(() => navigateTo('home'), 1200);
+}
+
+// ── DATA ──
+let STATION_CONFIG = loadStationConfig();
+let TRANSFORMERS   = Array.from({length: STATION_CONFIG.transformerCount}, (_,i) => i+1);
+let CIRCUITS       = STATION_CONFIG.circuits;
+const SILICA = ['جيد','متوسط','ضعيف','يحتاج تغيير'];
+const OIL_LVL = ['طبيعي','منخفض','مرتفع'];
+const COND = ['سليم','تالف','يحتاج صيانة'];
+
+// ── HELPERS ──
+function chips(name, opts, def='', cls='') {
+  return `<div class="chips ${cls}">${opts.map(o=>`<label class="chip-label"><input type="radio" name="${name}" value="${o}" ${o===def?'checked':''}> ${o}</label>`).join('')}</div>`;
+}
+function getV(id) { const e=document.getElementById(id); return e?e.value:''; }
+function getR(name) { const e=document.querySelector(`input[name="${name}"]:checked`); return e?e.value:''; }
+
+// ── BUILD TRANSFORMER FORMS ──
+function buildTransformerForms() {
+  const tabs = document.getElementById('t-tabs');
+  const forms = document.getElementById('t-forms');
+  TRANSFORMERS.forEach(n => {
+    const p = `t${n}_`;
+    const tab = document.createElement('button');
+    tab.className = 't-tab' + (n===1?' active':'');
+    tab.textContent = `محول ${n}`;
+    tab.onclick = () => switchT(n);
+    tab.id = `ttab_${n}`;
+    tabs.appendChild(tab);
+
+    const div = document.createElement('div');
+    div.id = `tf_${n}`;
+    div.style.display = n===1?'block':'none';
+    div.innerHTML = `
+      <div id="tlock_${n}" class="qr-lock" onclick="startQRScan('T${n}','المحول الرئيسي (${n})')">
+        🔒 امسح QR Code المحول الرئيسي (${n}) لفتح النموذج
+      </div>
+      <div id="tbody_${n}" style="display:none">
+      <div class="section-label">كفاءة السيلكاجيل</div>
+      <div class="field"><label>سيلكاجيل المحول</label>${chips(p+'sm',SILICA,'جيد')}</div>
+      <div class="field"><label>سيلكاجيل مغير الجهد</label>${chips(p+'st',SILICA,'جيد')}</div>
+
+      <div class="section-label">عدادات الحرارة</div>
+      <div class="grid2">
+        <div class="field"><label>حرارة الملفات (°C)</label><input type="number" id="${p}tw" placeholder="0"></div>
+        <div class="field"><label>حرارة الزيت (°C)</label><input type="number" id="${p}to" placeholder="0"></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>عداد الملفات</label>${chips(p+'twm',['مطابق','غير مطابق'],'مطابق','ok')}</div>
+        <div class="field"><label>عداد الزيت</label>${chips(p+'tom',['مطابق','غير مطابق'],'مطابق','ok')}</div>
+      </div>
+
+      <div class="section-label">المراوح والزيت</div>
+      <div class="field"><label>مراوح لا تعمل (العدد)</label><input type="number" id="${p}fans" placeholder="0" min="0"></div>
+      <div class="field"><label>مستوى الزيت في الخزان التعويضي</label>${chips(p+'olv',OIL_LVL,'طبيعي')}</div>
+      <div class="grid2">
+        <div class="field"><label>تسريب زيت المحول</label>${chips(p+'ol',['نعم','لا'],'لا','yn')}</div>
+        <div class="field"><label>تسريب زيت الهيدروليك</label>${chips(p+'hl',['نعم','لا'],'لا','yn')}</div>
+      </div>
+
+      <div class="section-label">ضغط الغاز</div>
+      <div class="grid2">
+        <div class="field"><label>SF6 - 220 (bar)</label><input type="number" id="${p}s220" placeholder="0.0" step="0.01"></div>
+        <div class="field"><label>SF6 - 66 (bar)</label><input type="number" id="${p}s66" placeholder="0.0" step="0.01"></div>
+      </div>
+      <div class="field" style="max-width:50%"><label>N2 (bar)</label><input type="number" id="${p}n2" placeholder="0.0" step="0.01"></div>
+
+      <div class="section-label">مغير الجهد</div>
+      <div class="field"><label>عدد مرات التشغيل</label><input type="number" id="${p}tap" placeholder="0" min="0"></div>
+
+      <div class="section-label">فحص سلامة الأرضي والتعادل</div>
+      <div class="field"><label>فحص سلامة أرضي المهمات</label>${chips(p+'earth',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+      <div class="field"><label>نقطة التعادل جهة 220 ك.ف</label>${chips(p+'neutral220',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+      <div class="field"><label>نقطة التعادل جهة 66 ك.ف</label>${chips(p+'neutral66',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+      <div class="field"><label>نقطة التعادل جهة 11 ك.ف</label>${chips(p+'neutral11',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+
+      <div class="field"><label>ملاحظات</label><textarea id="${p}notes" placeholder="أي ملاحظات..."></textarea></div>
+      </div>
+    `;
+    forms.appendChild(div);
+  });
+}
+
+function switchT(n) {
+  TRANSFORMERS.forEach(i => {
+    document.getElementById(`ttab_${i}`).className = 't-tab' + (i===n?' active':'');
+    document.getElementById(`tf_${i}`).style.display = i===n?'block':'none';
+  });
+}
+
+// ── BUSBARS (الرابط العرضي) ──
+const BUSBARS = [
+  { id:'bb220a', name:'الرابط العرضي (أ) 220 ك.ف' },
+  { id:'bb220b', name:'الرابط العرضي (ب) 220 ك.ف' },
+];
+
+function buildBusbarForms() {
+  const cont = document.getElementById('bb-forms');
+  if (!cont) return;
+  cont.innerHTML = '';
+  BUSBARS.forEach((bb, idx) => {
+    const p = `bb_${bb.id}_`;
+    const div = document.createElement('div');
+    div.style.marginBottom = '18px';
+    if (idx > 0) { div.style.paddingTop = '14px'; div.style.borderTop = '1px solid var(--border)'; }
+    div.innerHTML = `
+      <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px">${bb.name}</div>
+      <div id="bbqr_${idx}" class="qr-lock" onclick="startQRScan('BB${idx}','${bb.name}')">
+        🔒 امسح QR Code ${bb.name} لفتح النموذج
+      </div>
+      <div id="bbbody_${idx}" style="display:none">
+        <div class="grid2">
+          <div class="field"><label>SF6 (bar)</label><input type="number" id="${p}sf6" placeholder="0.0" step="0.01"></div>
+          <div class="field"><label>N2 (bar)</label><input type="number" id="${p}n2" placeholder="0.0" step="0.01"></div>
+        </div>
+        <div class="field"><label>معاينة محولات الجهد (VT)</label>${chips(p+'vt',COND,'سليم','cond')}</div>
+        <div class="field"><label>معاينة محولات التيار (CT)</label>${chips(p+'ct',COND,'سليم','cond')}</div>
+        <div class="field"><label>معاينة مانعة الصواعق</label>${chips(p+'la',COND,'سليم','cond')}</div>
+        <div class="field"><label>تسريب زيت الهيدروليك</label>${chips(p+'hl',['نعم','لا'],'لا','yn')}</div>
+        <div class="field"><label>فحص سلامة أرضي المهمات</label>${chips(p+'earth',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+        <div class="field"><label>ملاحظات</label><textarea id="${p}notes" placeholder="ملاحظات..."></textarea></div>
+      </div>
+    `;
+    cont.appendChild(div);
+  });
+}
+
+// ── BUILD CIRCUIT FORMS ──
+function buildCircuitForms() {
+  const cont = document.getElementById('c-forms');
+  CIRCUITS.forEach((c,idx) => {
+    const p = `c_${c.id}_`;
+    const div = document.createElement('div');
+    div.style.marginBottom = '18px';
+    if(idx > 0) div.style.paddingTop = '14px', div.style.borderTop = '1px solid var(--border)';
+    div.innerHTML = `
+      <div style="font-size:14px;font-weight:700;color:var(--primary);margin-bottom:8px">${c.name}</div>
+      <div id="clock_${idx}" class="qr-lock" onclick="startQRScan('C${idx}','${c.name}')">
+        🔒 امسح QR Code ${c.name} لفتح النموذج
+      </div>
+      <div id="cbody_${idx}" style="display:none">
+      <div class="grid2">
+        <div class="field"><label>SF6 (bar)</label><input type="number" id="${p}sf6" placeholder="0.0" step="0.01"></div>
+        <div class="field"><label>N2 (bar)</label><input type="number" id="${p}n2" placeholder="0.0" step="0.01"></div>
+      </div>
+      <div class="field"><label>معاينة محولات الجهد (VT)</label>${chips(p+'vt',COND,'سليم','cond')}</div>
+      <div class="field"><label>معاينة محولات التيار (CT)</label>${chips(p+'ct',COND,'سليم','cond')}</div>
+      <div class="field"><label>معاينة مانعة الصواعق</label>${chips(p+'la',COND,'سليم','cond')}</div>
+      <div class="field"><label>تسريب زيت الهيدروليك</label>${chips(p+'hl',['نعم','لا'],'لا','yn')}</div>
+      <div class="field"><label>فحص سلامة أرضي المهمات</label>${chips(p+'earth',['جيد','مقبول','يحتاج تغيير'],'جيد','cond')}</div>
+      <div class="field"><label>ملاحظات</label><textarea id="${p}notes" placeholder="ملاحظات..."></textarea></div>
+      </div>
+    `;
+    cont.appendChild(div);
+  });
+}
+
+// ── COLLECT DATA ──
+function collectData() {
+  const date = getV('f_date');
+  const name = getV('f_name');
+  const role = getR('f_role');
+  const rows = [];
+
+  TRANSFORMERS.forEach(n => {
+    const p = `t${n}_`;
+    rows.push({
+      'التاريخ': date, 'الاسم': name, 'الوظيفة': role,
+      'العنصر': `المحول الرئيسي (${n})`, 'النوع': 'محول',
+      'سيلكاجيل المحول': getR(p+'sm'),
+      'سيلكاجيل مغير الجهد': getR(p+'st'),
+      'حرارة الملفات °C': getV(p+'tw'),
+      'عداد حرارة الملفات': getR(p+'twm'),
+      'حرارة الزيت °C': getV(p+'to'),
+      'عداد حرارة الزيت': getR(p+'tom'),
+      'مراوح لا تعمل': getV(p+'fans'),
+      'مستوى الزيت': getR(p+'olv'),
+      'تسريب زيت المحول': getR(p+'ol'),
+      'تسريب الهيدروليك': getR(p+'hl'),
+      'SF6-220 bar': getV(p+'s220'),
+      'SF6-66 bar': getV(p+'s66'),
+      'N2 bar': getV(p+'n2'),
+      'تشغيل مغير الجهد': getV(p+'tap'),
+      'أرضي المهمات': getR(p+'earth'),
+      'نقطة التعادل 220 ك.ف': getR(p+'neutral220'),
+      'نقطة التعادل 66 ك.ف': getR(p+'neutral66'),
+      'نقطة التعادل 11 ك.ف': getR(p+'neutral11'),
+      'ملاحظات': getV(p+'notes'),
+      'VT':'','CT':'','مانعة الصواعق':''
+    });
+  });
+
+  BUSBARS.forEach((bb, idx) => {
+    const p = `bb_${bb.id}_`;
+    rows.push({
+      'التاريخ': date, 'الاسم': name, 'الوظيفة': role,
+      'العنصر': bb.name, 'النوع': 'رابط عرضي',
+      'سيلكاجيل المحول':'','سيلكاجيل مغير الجهد':'',
+      'حرارة الملفات °C':'','عداد حرارة الملفات':'',
+      'حرارة الزيت °C':'','عداد حرارة الزيت':'',
+      'مراوح لا تعمل':'','مستوى الزيت':'',
+      'تسريب زيت المحول':'',
+      'تسريب الهيدروليك': getR(p+'hl'),
+      'SF6-220 bar': getV(p+'sf6'),
+      'SF6-66 bar':'',
+      'N2 bar': getV(p+'n2'),
+      'تشغيل مغير الجهد':'',
+      'أرضي المهمات': getR(p+'earth'),
+      'نقطة التعادل 220 ك.ف':'',
+      'نقطة التعادل 66 ك.ف':'',
+      'نقطة التعادل 11 ك.ف':'',
+      'ملاحظات': getV(p+'notes'),
+      'VT': getR(p+'vt'),
+      'CT': getR(p+'ct'),
+      'مانعة الصواعق': getR(p+'la')
+    });
+  });
+
+  CIRCUITS.forEach(c => {
+    const p = `c_${c.id}_`;
+    rows.push({
+      'التاريخ': date, 'الاسم': name, 'الوظيفة': role,
+      'العنصر': c.name, 'النوع': 'دائرة',
+      'سيلكاجيل المحول':'','سيلكاجيل مغير الجهد':'',
+      'حرارة الملفات °C':'','عداد حرارة الملفات':'',
+      'حرارة الزيت °C':'','عداد حرارة الزيت':'',
+      'مراوح لا تعمل':'','مستوى الزيت':'',
+      'تسريب زيت المحول':'',
+      'تسريب الهيدروليك': getR(p+'hl'),
+      'SF6-220 bar': getV(p+'sf6'),
+      'SF6-66 bar':'',
+      'N2 bar': getV(p+'n2'),
+      'تشغيل مغير الجهد':'',
+      'أرضي المهمات': getR(p+'earth'),
+      'نقطة التعادل 220 ك.ف':'',
+      'نقطة التعادل 66 ك.ف':'',
+      'نقطة التعادل 11 ك.ف':'',
+      'ملاحظات': getV(p+'notes'),
+      'VT': getR(p+'vt'),
+      'CT': getR(p+'ct'),
+      'مانعة الصواعق': getR(p+'la')
+    });
+  });
+  return { date, name, role, rows };
+}
+
+// ── SYNC HELPERS ──
+function getUrl() { return localStorage.getItem('sheets_url') || ''; }
+
+// ── FETCH HELPER (يحل مشكلة CORS على الموبايل) ──
+async function apsFetch(url, payload) {
+  // GET request (للقراءة)
+  if (!payload) {
+    return new Promise((resolve) => {
+      const cb = 'cb_' + Date.now();
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => { resolve(null); script.remove(); }, 8000);
+      window[cb] = (data) => { clearTimeout(timeout); resolve(data); delete window[cb]; script.remove(); };
+      script.src = url + (url.includes('?') ? '&' : '?') + 'callback=' + cb;
+      script.onerror = () => { clearTimeout(timeout); resolve(null); script.remove(); };
+      document.head.appendChild(script);
+    });
+  }
+  // POST request - يستخدم form submit بدل fetch لتجنب CORS
+  return new Promise((resolve) => {
+    const iframe = document.createElement('iframe');
+    iframe.name = 'aps_' + Date.now();
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.target = iframe.name;
+    form.style.display = 'none';
+
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(payload);
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    const timeout = setTimeout(() => {
+      resolve({ status: 'ok', message: 'sent' });
+      iframe.remove(); form.remove();
+    }, 5000);
+
+    iframe.onload = () => {
+      clearTimeout(timeout);
+      resolve({ status: 'ok', message: 'sent' });
+      setTimeout(() => { iframe.remove(); form.remove(); }, 1000);
+    };
+
+    form.submit();
+  });
+}
+
+// ── DIRECT FETCH (للاب توب والأجهزة التي تدعم CORS) ──
+async function directFetch(url, payload) {
+  try {
+    if (!payload) {
+      const res = await fetch(url, { method:'GET', redirect:'follow' });
+      return JSON.parse(await res.text());
+    }
+    const res = await fetch(url, {
+      method: 'POST', redirect: 'follow',
+      headers: { 'Content-Type': 'text/plain' },
+      body: JSON.stringify(payload)
+    });
+    return JSON.parse(await res.text());
+  } catch(e) { return null; }
+}
+
+// ── SMART FETCH (يجرب direct أولاً ثم form fallback) ──
+async function smartFetch(url, payload) {
+  const result = await directFetch(url, payload);
+  if (result && result.status === 'ok') return result;
+  // fallback للموبايل
+  if (payload) {
+    await apsFetch(url, payload);
+    return { status: 'ok', message: 'sent via form' };
+  }
+  return null;
+}
+
+async function syncFromServer() {
+  const url = getUrl();
+  if (!url) return null;
+  const stationId = localStorage.getItem('station_sheet_id') || '';
+  const endpoint = url + '?action=getRecords' + (stationId ? '&stationId=' + stationId : '');
+  try {
+    const data = await directFetch(endpoint);
+    if (data && data.status === 'ok' && Array.isArray(data.records)) {
+      const local = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+      const serverIds = new Set(data.records.map(r => String(r.id)));
+      const onlyLocal = local.filter(r => !serverIds.has(String(r.id)));
+      const merged = [...data.records, ...onlyLocal].sort((a,b) => b.id - a.id);
+      localStorage.setItem('maintenance_records', JSON.stringify(merged));
+      return merged;
+    }
+  } catch(e) {}
+  return null;
+}
+
+async function fetchStations() {
+  const url = getUrl();
+  if (!url) return [];
+  try {
+    const data = await directFetch(url + '?action=getStations');
+    if (data && data.status === 'ok') return data.stations || [];
+  } catch(e) {}
+  return [];
+}
+
+async function pushToServer(record) {
+  const url = getUrl();
+  if (!url) return false;
+  const stationId = localStorage.getItem('station_sheet_id') || '';
+  const elementOrder = [
+    ...TRANSFORMERS.map(n => `المحول الرئيسي (${n})`),
+    ...CIRCUITS.map(c => c.name)
+  ];
+  const payload = { action:'saveRecord', ...record, stationId, elementOrder };
+  const result = await smartFetch(url, payload);
+  return result && result.status === 'ok';
+}
+
+async function setupStationOnServer() {
+  const url = getUrl();
+  if (!url) return;
+  showToast('⏳ جاري تجهيز ملف المحطة...', '');
+  const payload = { action:'setupStation', config: STATION_CONFIG };
+  const result = await smartFetch(url, payload);
+  if (result && result.stationId) {
+    localStorage.setItem('station_sheet_id', result.stationId);
+    localStorage.setItem('station_sheet_url', result.stationUrl);
+    const el = document.getElementById('station-sheet-url');
+    if (el) el.innerHTML = `📊 <a href="${result.stationUrl}" target="_blank" style="color:#f0a500">فتح شيت المحطة ↗</a>`;
+    showToast('✅ تم تجهيز ملف المحطة وإنشاء QR Codes!', 'success');
+  } else {
+    showToast('✅ تم الإرسال للسيرفر', 'success');
+  }
+}
+
+// ── اختيار المحطة من الرئيسية ──
+async function loadStationsList() {
+  const statusEl = document.getElementById('station-select-status');
+  const select   = document.getElementById('station-select');
+  if (!getUrl()) {
+    if (statusEl) statusEl.textContent = '⚠️ أدخل رابط Google Sheets في الإعدادات أولاً';
+    return;
+  }
+  if (statusEl) statusEl.textContent = '⏳ جاري تحميل قائمة المحطات...';
+  const stations = await fetchStations();
+  if (!stations.length) {
+    if (statusEl) statusEl.textContent = 'لا توجد محطات مسجلة بعد';
+    return;
+  }
+  // ملء القائمة
+  const current = localStorage.getItem('station_sheet_id') || '';
+  select.innerHTML = '<option value="">-- اختر محطة --</option>';
+  stations.forEach(s => {
+    const opt = document.createElement('option');
+    opt.value = JSON.stringify(s);
+    opt.textContent = s.name + (s.voltage ? ' (' + s.voltage + ' ك.ف)' : '');
+    if (String(s.id) === String(current)) opt.selected = true;
+    select.appendChild(opt);
+  });
+  if (statusEl) statusEl.textContent = stations.length + ' محطة متاحة';
+}
+
+function selectStation(val) {
+  if (!val) return;
+  try {
+    const s = JSON.parse(val);
+    // حفظ بيانات المحطة المختارة
+    const cfg = {
+      name: s.name,
+      voltage: s.voltage || '',
+      transformerCount: parseInt(s.tCount) || 5,
+      circuits: []
+    };
+    // لو عدد الدوائر موجود نعمل placeholders
+    const cCount = parseInt(s.cCount) || 0;
+    for (let i = 0; i < cCount; i++) {
+      cfg.circuits.push({ id:'c'+i, name:'دائرة ' + (i+1) });
+    }
+    localStorage.setItem('station_config', JSON.stringify(cfg));
+    localStorage.setItem('station_sheet_id', s.id || '');
+    localStorage.setItem('station_sheet_url', s.url || '');
+
+    STATION_CONFIG = cfg;
+    TRANSFORMERS   = Array.from({length: cfg.transformerCount}, (_,i) => i+1);
+    CIRCUITS       = cfg.circuits;
+
+    updateStationUI();
+    // إعادة بناء النماذج
+    document.getElementById('t-tabs').innerHTML = '';
+    document.getElementById('t-forms').innerHTML = '';
+    document.getElementById('c-forms').innerHTML = '';
+    buildTransformerForms();
+    buildBusbarForms();
+    buildCircuitForms();
+    loadConfigToForm();
+
+    const statusEl = document.getElementById('station-select-status');
+    if (statusEl) statusEl.textContent = '✅ تم اختيار ' + s.name;
+    showToast('✅ تم اختيار ' + s.name, 'success');
+
+    // جلب الدوائر الحقيقية من الشيت
+    loadCircuitsFromStation(s.id);
+  } catch(e) { showToast('⚠️ خطأ في اختيار المحطة', 'error'); }
+}
+
+async function loadCircuitsFromStation(stationId) {
+  // جلب أسماء الشيتات (الدوائر والمحولات) من الملف
+  const url = getUrl();
+  if (!url || !stationId) return;
+  try {
+    const data = await directFetch(url + '?action=getStationDetails&stationId=' + stationId);
+    if (data && data.status === 'ok' && data.circuits) {
+      CIRCUITS = data.circuits;
+      STATION_CONFIG.circuits = data.circuits;
+      localStorage.setItem('station_config', JSON.stringify(STATION_CONFIG));
+      document.getElementById('c-forms').innerHTML = '';
+      buildCircuitForms();
+    }
+  } catch(e) {}
+}
+
+// ── SHARE MODAL ──
+let currentRecord = null;
+
+function openShareModal(record) {
+  currentRecord = record;
+  const modal = document.getElementById('share-modal');
+  modal.style.display = 'flex';
+}
+function closeShareModal() {
+  document.getElementById('share-modal').style.display = 'none';
+}
+
+// ── SUBMIT ──
+async function submitForm() {
+  const { date, name, role, rows } = collectData();
+  if (!date || !name || !role) { showToast('⚠️ يرجى تعبئة التاريخ والاسم والوظيفة', 'error'); return; }
+
+  showToast('⏳ جاري الحفظ...', '');
+  const record = { id: Date.now(), date, name, role, rows, submittedAt: new Date().toLocaleString('ar-EG') };
+
+  // حفظ محلي
+  const history = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+  history.unshift(record);
+  localStorage.setItem('maintenance_records', JSON.stringify(history));
+
+  // رفع للسيرفر
+  const url = getUrl();
+  if (url) await pushToServer(record);
+
+  updateStats();
+  showToast('✅ تم الحفظ بنجاح!', 'success');
+
+  // فتح نافذة اختيار طريقة الإرسال
+  setTimeout(() => openShareModal(record), 800);
+}
+
+// ── رسالة نصية واتساب ──
+function shareText() {
+  closeShareModal();
+  if (!currentRecord) return;
+  const r = currentRecord;
+
+  // استخراج بيانات المحولات والدوائر
+  const transformers = r.rows.filter(row => row['النوع'] === 'محول');
+  const circuits = r.rows.filter(row => row['النوع'] === 'دائرة');
+
+  let msg = `⚡ *كارت متابعة مهمات محطة كهرباء العاشر الجديدة*\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `📅 التاريخ: ${r.date}\n`;
+  msg += `👤 الاسم: ${r.name}\n`;
+  msg += `💼 الوظيفة: ${r.role}\n`;
+  msg += `🕐 الوقت: ${r.submittedAt}\n`;
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+
+  // المحولات
+  msg += `🔌 *المحولات الرئيسية:*\n`;
+  transformers.forEach(t => {
+    msg += `▪️ ${t['العنصر']}\n`;
+    if (t['حرارة الملفات °C']) msg += `  🌡 ملفات: ${t['حرارة الملفات °C']}°C (${t['عداد حرارة الملفات'] || '-'})\n`;
+    if (t['حرارة الزيت °C'])   msg += `  🌡 زيت: ${t['حرارة الزيت °C']}°C (${t['عداد حرارة الزيت'] || '-'})\n`;
+    if (t['مستوى الزيت'])      msg += `  💧 مستوى الزيت: ${t['مستوى الزيت']}\n`;
+    if (t['تسريب زيت المحول'] === 'نعم') msg += `  ⚠️ تسريب زيت!\n`;
+    if (t['تسريب الهيدروليك'] === 'نعم') msg += `  ⚠️ تسريب هيدروليك!\n`;
+    if (t['SF6-220 bar'])       msg += `  📊 SF6-220: ${t['SF6-220 bar']} bar\n`;
+    if (t['ملاحظات'])           msg += `  📝 ${t['ملاحظات']}\n`;
+  });
+
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+
+  // الدوائر
+  msg += `⚡ *الدوائر:*\n`;
+  circuits.forEach(c => {
+    msg += `▪️ ${c['العنصر']}\n`;
+    if (c['VT'])                msg += `  VT: ${c['VT']} | CT: ${c['CT']} | صواعق: ${c['مانعة الصواعق']}\n`;
+    if (c['تسريب الهيدروليك'] === 'نعم') msg += `  ⚠️ تسريب هيدروليك!\n`;
+    if (c['ملاحظات'])           msg += `  📝 ${c['ملاحظات']}\n`;
+  });
+
+  msg += `━━━━━━━━━━━━━━━━━━━━\n`;
+  msg += `✅ جهد 11/66/220 ك.ف`;
+
+  const waNumber = '201141162798';
+  window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+}
+
+// ── بناء ملف Excel بشيتات منفصلة لكل محول ودائرة ──
+function buildWorkbook(history) {
+  const allRows = history.flatMap(rec => rec.rows);
+  if (!allRows.length) return null;
+
+  const wb = XLSX.utils.book_new();
+
+  // شيت ملخص عام (كل البيانات مجمعة)
+  const wsAll = XLSX.utils.json_to_sheet(allRows, { header: Object.keys(allRows[0]) });
+  wsAll['!cols'] = Object.keys(allRows[0]).map(() => ({ wch: 20 }));
+  XLSX.utils.book_append_sheet(wb, wsAll, 'ملخص عام');
+
+  // أسماء العناصر بالترتيب (محولات ثم دوائر) بدون تكرار
+  const elementNames = [];
+  allRows.forEach(row => {
+    const name = row['العنصر'];
+    if (name && !elementNames.includes(name)) elementNames.push(name);
+  });
+
+  // شيت منفصل لكل عنصر (محول أو دائرة)
+  elementNames.forEach(name => {
+    const rowsForElement = allRows.filter(row => row['العنصر'] === name);
+    // إزالة الأعمدة الفاضية بالكامل لهذا العنصر (يفرق بين محول ودائرة)
+    const keys = Object.keys(rowsForElement[0]);
+    const usefulKeys = keys.filter(k => rowsForElement.some(r => r[k] !== '' && r[k] !== undefined && r[k] !== null));
+    const cleanedRows = rowsForElement.map(r => {
+      const o = {};
+      usefulKeys.forEach(k => o[k] = r[k]);
+      return o;
+    });
+    const ws = XLSX.utils.json_to_sheet(cleanedRows, { header: usefulKeys });
+    ws['!cols'] = usefulKeys.map(() => ({ wch: 20 }));
+    // اسم الشيت في Excel أقصاه 31 حرف ومحظور فيه / \ ? * [ ]
+    let sheetName = name.replace(/[\/\\\?\*\[\]]/g, '-').slice(0, 31);
+    XLSX.utils.book_append_sheet(wb, ws, sheetName);
+  });
+
+  return wb;
+}
+
+// ── Excel + واتساب ──
+function shareExcel() {
+  closeShareModal();
+  if (!currentRecord) return;
+  const r = currentRecord;
+
+  const history = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+  const wb = buildWorkbook(history);
+  if (!wb) { showToast('لا توجد بيانات', 'error'); return; }
+
+  const fileName = `مهمات_محطة_العاشر_${r.date.replace(/\//g,'-')}.xlsx`;
+
+  // تنزيل الملف
+  XLSX.writeFile(wb, fileName);
+  showToast('✅ تم تنزيل الملف، افتح واتساب وأرفقه', 'success');
+
+  // فتح واتساب بعد ثانيتين
+  setTimeout(() => {
+    const waNumber = '201141162798';
+    const msg =
+`📊 *كارت متابعة مهمات محطة كهرباء العاشر الجديدة*
+━━━━━━━━━━━━━━━━━━━━
+📅 التاريخ: ${r.date}
+👤 الاسم: ${r.name}
+💼 الوظيفة: ${r.role}
+🕐 الوقت: ${r.submittedAt}
+━━━━━━━━━━━━━━━━━━━━
+📎 ملف: ${fileName}
+يرجى إرفاق الملف من مجلد التنزيلات 👆`;
+    window.open(`https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`, '_blank');
+  }, 2000);
+}
+
+// ── EXPORT ALL EXCEL (من صفحة السجلات) ──
+function exportAllExcel() {
+  const history = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+  const wb = buildWorkbook(history);
+  if (!wb) { showToast('لا توجد بيانات للتصدير', 'error'); return; }
+  const fileName = `مهمات_محطة_العاشر_${new Date().toLocaleDateString('ar-EG').replace(/\//g,'-')}.xlsx`;
+  XLSX.writeFile(wb, fileName);
+  showToast('✅ تم التصدير بنجاح', 'success');
+}
+
+
+// ── HISTORY ──
+async function renderHistory(fromServer = false) {
+  const cont = document.getElementById('history-list');
+  cont.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:30px;font-size:13px">⏳ جاري التحميل...</div>';
+
+  if (fromServer) {
+    await syncFromServer();
+  }
+
+  const history = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+  const url = getUrl();
+
+  if (!history.length) {
+    cont.innerHTML = '<div style="text-align:center;color:var(--text-muted);padding:40px 20px;font-size:14px">لا توجد سجلات بعد</div>';
+    return;
+  }
+
+  cont.innerHTML = history.map(r => `
+    <div class="history-item">
+      <div class="history-dot" style="background:var(--primary)"></div>
+      <div class="history-info">
+        <div class="history-title">${r.date} — ${r.name}</div>
+        <div class="history-sub">${r.role} · ${r.submittedAt}</div>
+      </div>
+      <span class="history-badge" style="background:var(--success-bg);color:var(--success)">
+        ${url ? '☁️ مزامن' : '💾 محلي'}
+      </span>
+    </div>
+  `).join('');
+}
+
+// ── STATS ──
+function updateStats() {
+  const history = JSON.parse(localStorage.getItem('maintenance_records') || '[]');
+  const today = new Date().toISOString().split('T')[0];
+  const todayCount = history.filter(r => r.date === today).length;
+  document.getElementById('stat-submitted').textContent = todayCount;
+  document.getElementById('stat-total').textContent = history.length;
+}
+
+// ── SETTINGS ──
+async function saveSettings() {
+  const url = document.getElementById('sheets-url').value.trim();
+  localStorage.setItem('sheets_url', url);
+  if (url) {
+    showToast('⏳ جاري التحقق من الاتصال...', '');
+    try {
+      const res = await fetch(url + '?action=ping', { redirect: 'follow' });
+      const text = await res.text();
+      const data = JSON.parse(text);
+      if (data.status === 'ok') {
+        document.getElementById('sheets-status').textContent = 'مربوط ✓';
+        showToast('✅ تم الربط! جاري تجهيز ملف المحطة...', 'success');
+        // تجهيز ملف المحطة تلقائياً لو مش موجود
+        if (!localStorage.getItem('station_sheet_id')) {
+          await setupStationOnServer();
+        }
+        await syncFromServer();
+        updateStats();
+        renderHistory();
+        loadConfigToForm();
+      } else {
+        document.getElementById('sheets-status').textContent = 'خطأ في الاتصال';
+        showToast('⚠️ تأكد من الرابط وإعدادات الـ Deploy', 'error');
+      }
+    } catch(e) {
+      console.error('ping error:', e);
+      document.getElementById('sheets-status').textContent = 'تعذر الاتصال';
+      showToast('⚠️ تعذر الاتصال - تأكد إن Who has access = Anyone', 'error');
+    }
+  } else {
+    document.getElementById('sheets-status').textContent = 'غير مربوط';
+    showToast('تم الحفظ', '');
+  }
+}
+
+async function syncNow() {
+  showToast('⏳ جاري المزامنة...', '');
+  const result = await syncFromServer();
+  if (result) {
+    updateStats();
+    renderHistory();
+    showToast('✅ تمت المزامنة بنجاح', 'success');
+  } else {
+    showToast('⚠️ تعذرت المزامنة، تأكد من الاتصال', 'error');
+  }
+}
+
+// ── DELETE ──
+function showDeleteConfirm() {
+  document.getElementById('delete-modal').style.display = 'flex';
+}
+
+function confirmDeleteAll() {
+  document.getElementById('delete-modal').style.display = 'none';
+  localStorage.removeItem('maintenance_records');
+  // إعادة قفل كل النماذج
+  lockAllForms();
+  updateStats();
+  renderHistory();
+  showToast('🗑️ تم حذف كل البيانات', 'error');
+}
+
+function clearAllData() { showDeleteConfirm(); }
+
+// ── QR LOCK SYSTEM ──
+const scannedMap = {}; // key: 'T1','T2','C0','C1'...
+
+function isUnlocked(key) { return !!scannedMap[key]; }
+
+function unlockElement(key) { scannedMap[key] = true; }
+
+function lockAllForms() {
+  Object.keys(scannedMap).forEach(k => delete scannedMap[k]);
+  TRANSFORMERS.forEach(n => setTransformerLock(n, false));
+  BUSBARS.forEach((bb,i) => setBusbarLock(i, false));
+  CIRCUITS.forEach((c,i) => setCircuitLock(i, false));
+}
+
+function setTransformerLock(n, unlocked) {
+  const lockEl = document.getElementById(`tlock_${n}`);
+  const bodyEl = document.getElementById(`tbody_${n}`);
+  if (!lockEl || !bodyEl) return;
+  if (unlocked) {
+    lockEl.className = 'qr-lock unlocked';
+    lockEl.innerHTML = `✅ تم مسح QR — المحول الرئيسي (${n}) مفتوح`;
+    lockEl.onclick = null;
+    bodyEl.style.display = 'block';
+  } else {
+    lockEl.className = 'qr-lock';
+    lockEl.innerHTML = `🔒 امسح QR Code المحول الرئيسي (${n}) لفتح النموذج`;
+    lockEl.onclick = () => startQRScan('T'+n, `المحول الرئيسي (${n})`);
+    bodyEl.style.display = 'none';
+  }
+}
+
+function setCircuitLock(i, unlocked) {
+  const c = CIRCUITS[i];
+  if (!c) return;
+  const lockEl = document.getElementById(`clock_${i}`);
+  const bodyEl = document.getElementById(`cbody_${i}`);
+  if (!lockEl || !bodyEl) return;
+  if (unlocked) {
+    lockEl.className = 'qr-lock unlocked';
+    lockEl.innerHTML = `✅ تم مسح QR — ${c.name} مفتوح`;
+    lockEl.onclick = null;
+    bodyEl.style.display = 'block';
+  } else {
+    lockEl.className = 'qr-lock';
+    lockEl.innerHTML = `🔒 امسح QR Code ${c.name} لفتح النموذج`;
+    lockEl.onclick = () => startQRScan('C'+i, c.name);
+    bodyEl.style.display = 'none';
+  }
+}
+
+// QR Scanner
+let qrStream = null;
+let qrInterval = null;
+let qrPendingKey = null;
+let qrPendingName = null;
+
+function startQRScan(key, name) {
+  qrPendingKey  = key;
+  qrPendingName = name;
+  document.getElementById('qr-scan-title').textContent = name;
+  document.getElementById('qr-scan-status').textContent = '🔍 جاري البحث...';
+  document.getElementById('qr-overlay').classList.remove('hidden');
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode:'environment' } })
+    .then(stream => {
+      qrStream = stream;
+      const v = document.getElementById('qr-video');
+      v.srcObject = stream; v.play();
+      qrInterval = setInterval(scanQRFrame, 350);
+    })
+    .catch(() => {
+      document.getElementById('qr-scan-status').textContent = '⚠️ تعذر فتح الكاميرا';
+    });
+}
+
+function closeQRScanner() {
+  clearInterval(qrInterval); qrInterval = null;
+  if (qrStream) { qrStream.getTracks().forEach(t => t.stop()); qrStream = null; }
+  const v = document.getElementById('qr-video');
+  if (v) v.srcObject = null;
+  document.getElementById('qr-overlay').classList.add('hidden');
+  qrPendingKey = null;
+}
+
+function scanQRFrame() {
+  const v = document.getElementById('qr-video');
+  const c = document.getElementById('qr-canvas');
+  if (!v || !v.videoWidth) return;
+  c.width = v.videoWidth; c.height = v.videoHeight;
+  c.getContext('2d').drawImage(v,0,0);
+  if (!('BarcodeDetector' in window)) return;
+  new BarcodeDetector({formats:['qr_code']}).detect(c).then(codes => {
+    if (!codes.length) return;
+    handleQRCode(codes[0].rawValue);
+  }).catch(()=>{});
+}
+
+function handleQRCode(code) {
+  // MAHATTA-XXXXXX-T1 / MAHATTA-XXXXXX-C0 / MAHATTA-XXXXXX-BB0
+  const tMatch  = code.match(/-(T\d+)$/);
+  const cMatch  = code.match(/-(C\d+)$/);
+  const bbMatch = code.match(/-(BB\d+)$/);
+  let detectedKey = null;
+
+  if      (tMatch)  detectedKey = 'T'  + parseInt(tMatch[1].substring(1));
+  else if (cMatch)  detectedKey = 'C'  + parseInt(cMatch[1].substring(1));
+  else if (bbMatch) detectedKey = 'BB' + parseInt(bbMatch[1].substring(2));
+
+  if (!detectedKey) {
+    document.getElementById('qr-scan-status').textContent = '❌ كود غير معروف';
+    navigator.vibrate && navigator.vibrate([100,50,100]);
+    return;
+  }
+
+  if (detectedKey !== qrPendingKey) {
+    document.getElementById('qr-scan-status').textContent = `⚠️ هذا كود عنصر آخر! المطلوب: ${qrPendingName||qrPendingKey}`;
+    navigator.vibrate && navigator.vibrate([100,50,100]);
+    return;
+  }
+
+  navigator.vibrate && navigator.vibrate([200]);
+  document.getElementById('qr-scan-status').textContent = `✅ تم التحقق: ${qrPendingName}`;
+  unlockElement(detectedKey);
+
+  const key = detectedKey;
+  setTimeout(() => {
+    closeQRScanner();
+    if (key.startsWith('BB')) {
+      const i = parseInt(key.substring(2));
+      setBusbarLock(i, true);
+      showToast(`✅ تم فتح ${BUSBARS[i]?.name||''}`, 'success');
+    } else if (key.startsWith('T')) {
+      const n = parseInt(key.substring(1));
+      setTransformerLock(n, true);
+      switchT(n);
+      showToast(`✅ تم فتح المحول الرئيسي (${n})`, 'success');
+    } else {
+      const i = parseInt(key.substring(1));
+      setCircuitLock(i, true);
+      showToast(`✅ تم فتح ${CIRCUITS[i]?.name||''}`, 'success');
+    }
+  }, 700);
+}
+
+function setBusbarLock(i, unlocked) {
+  const bb = BUSBARS[i];
+  if (!bb) return;
+  const lockEl = document.getElementById(`bbqr_${i}`);
+  const bodyEl = document.getElementById(`bbbody_${i}`);
+  if (!lockEl || !bodyEl) return;
+  if (unlocked) {
+    lockEl.className = 'qr-lock unlocked';
+    lockEl.innerHTML = `✅ تم مسح QR — ${bb.name} مفتوح`;
+    lockEl.onclick = null;
+    bodyEl.style.display = 'block';
+  } else {
+    lockEl.className = 'qr-lock';
+    lockEl.innerHTML = `🔒 امسح QR Code ${bb.name} لفتح النموذج`;
+    lockEl.onclick = () => startQRScan('BB'+i, bb.name);
+    bodyEl.style.display = 'none';
+  }
+}
+
+// ── PIN LOCK ──
+const CORRECT_PIN = '62003';
+let pinEntry = '';
+let sectionPinEntry = '';
+let pendingPage = '';
+
+function pinKey(d) {
+  if (pinEntry.length >= 5) return;
+  pinEntry += d;
+  updatePinDots('pd', pinEntry);
+  if (pinEntry.length === 5) {
+    setTimeout(() => checkPin(), 150);
+  }
+}
+function pinDel() {
+  pinEntry = pinEntry.slice(0, -1);
+  updatePinDots('pd', pinEntry);
+  document.getElementById('pin-error').textContent = '';
+}
+function checkPin() {
+  if (pinEntry === CORRECT_PIN) {
+    document.getElementById('pin-overlay').classList.add('hidden');
+    sessionStorage.setItem('app_unlocked', '1');
+  } else {
+    document.getElementById('pin-error').textContent = '❌ رقم سري خاطئ، حاول مجدداً';
+    pinEntry = '';
+    updatePinDots('pd', pinEntry);
+    navigator.vibrate && navigator.vibrate([80,40,80]);
+  }
+}
+
+function sectionPinKey(d) {
+  if (sectionPinEntry.length >= 5) return;
+  sectionPinEntry += d;
+  updatePinDots('spd', sectionPinEntry);
+  if (sectionPinEntry.length === 5) {
+    setTimeout(() => checkSectionPin(), 150);
+  }
+}
+function sectionPinDel() {
+  sectionPinEntry = sectionPinEntry.slice(0, -1);
+  updatePinDots('spd', sectionPinEntry);
+  document.getElementById('section-pin-error').textContent = '';
+}
+function checkSectionPin() {
+  if (sectionPinEntry === CORRECT_PIN) {
+    document.getElementById('section-pin-overlay').classList.add('hidden');
+    sectionPinEntry = '';
+    updatePinDots('spd', sectionPinEntry);
+    navigateTo(pendingPage);
+  } else {
+    document.getElementById('section-pin-error').textContent = '❌ رقم سري خاطئ';
+    sectionPinEntry = '';
+    updatePinDots('spd', sectionPinEntry);
+    navigator.vibrate && navigator.vibrate([80,40,80]);
+  }
+}
+
+function updatePinDots(prefix, val) {
+  for (let i = 0; i < 5; i++) {
+    const dot = document.getElementById(prefix + i);
+    if (dot) dot.classList.toggle('filled', i < val.length);
+  }
+}
+
+// ── NAVIGATION ──
+function goPage(name) {
+  const protected_pages = ['history', 'settings'];
+  if (protected_pages.includes(name)) {
+    pendingPage = name;
+    sectionPinEntry = '';
+    updatePinDots('spd', sectionPinEntry);
+    document.getElementById('section-pin-error').textContent = '';
+    const titles = { history: 'السجلات السابقة', settings: 'الإعدادات' };
+    document.getElementById('section-pin-title').textContent = titles[name] || '';
+    document.getElementById('section-pin-overlay').classList.remove('hidden');
+    return;
+  }
+  navigateTo(name);
+}
+
+function navigateTo(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => { b.classList.remove('active'); b.querySelector('.nav-dot')?.remove(); });
+  document.getElementById('page-'+name).classList.add('active');
+  const nb = document.getElementById('nav-'+name);
+  if(nb) {
+    nb.classList.add('active');
+    if(!nb.querySelector('.nav-dot')) {
+      const dot = document.createElement('span');
+      dot.className = 'nav-dot';
+      nb.appendChild(dot);
+    }
+  }
+  window.scrollTo(0,0);
+  // مزامنة تلقائية عند فتح السجلات
+  if (name === 'history') renderHistory(true);
+}
+
+// ── TOAST ──
+function showToast(msg, type='') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show ' + type;
+  setTimeout(() => t.className = 'toast', 2800);
+}
+
+// ── RESET ──
+function resetForm() {
+  document.querySelectorAll('#page-form input[type=text], #page-form input[type=number], #page-form input[type=date], #page-form textarea').forEach(e => e.value='');
+  document.querySelectorAll('#page-form input[type=radio]').forEach(e => {
+    if(['جيد','طبيعي','مطابق','سليم','لا'].includes(e.value)) e.checked = true;
+    else e.checked = false;
+  });
+  showToast('تم مسح النموذج');
+}
+
+// ── INIT ──
+function init() {
+  document.getElementById('pin-overlay').classList.add('hidden');
+
+  // تحميل إعدادات المحطة
+  STATION_CONFIG = loadStationConfig();
+  TRANSFORMERS   = Array.from({length: STATION_CONFIG.transformerCount}, (_,i) => i+1);
+  CIRCUITS       = STATION_CONFIG.circuits;
+  updateStationUI();
+
+  document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+  document.getElementById('home-date').textContent = new Date().toLocaleDateString('ar-EG', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
+  buildTransformerForms();
+  buildBusbarForms();
+  buildCircuitForms();
+  updateStats();
+  renderHistory();
+  const savedUrl = localStorage.getItem('sheets_url') || '';
+  document.getElementById('sheets-url').value = savedUrl;
+  document.getElementById('sheets-status').textContent = savedUrl ? 'مربوط ✓' : 'غير مربوط';
+  loadConfigToForm();
+  // تحميل قائمة المحطات تلقائياً لو الرابط موجود
+  if (localStorage.getItem('sheets_url')) {
+    loadStationsList();
+  }
+}
+
+init();
+
+// ── SERVICE WORKER ──
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(() => {});
+  });
+}
+
+// ── PWA INSTALL PROMPT ──
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('install-banner').style.display = 'flex';
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('install-btn')?.addEventListener('click', async () => {
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      document.getElementById('install-banner').style.display = 'none';
+      if (outcome === 'accepted') showToast('✅ تم تثبيت التطبيق!', 'success');
+    }
+  });
+  document.getElementById('install-close')?.addEventListener('click', () => {
+    document.getElementById('install-banner').style.display = 'none';
+  });
+});
+</script>
+
+<!-- INSTALL BANNER -->
+<div id="install-banner" style="display:none;position:fixed;bottom:72px;left:12px;right:12px;background:#1a3a5c;color:#fff;border-radius:14px;padding:14px 16px;z-index:200;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3)">
+  <span style="font-size:28px">⚡</span>
+  <div style="flex:1">
+    <div style="font-size:13px;font-weight:700;font-family:'Cairo',sans-serif">ثبّت التطبيق على موبايلك</div>
+    <div style="font-size:11px;opacity:0.8;font-family:'Cairo',sans-serif;margin-top:2px">وصول سريع بدون متصفح</div>
+  </div>
+  <button id="install-btn" style="background:#f0a500;color:#1a2332;border:none;border-radius:8px;padding:8px 14px;font-family:'Cairo',sans-serif;font-size:12px;font-weight:700;cursor:pointer">تثبيت</button>
+  <button id="install-close" style="background:rgba(255,255,255,0.15);color:#fff;border:none;border-radius:8px;padding:8px 10px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer">✕</button>
+</div>
+
+</body>
+</html>
